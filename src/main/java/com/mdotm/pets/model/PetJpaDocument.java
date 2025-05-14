@@ -2,49 +2,51 @@ package com.mdotm.pets.model;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
 
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "pet")
-public class PetDocument {
+@Table(name = "pet")
+public class PetJpaDocument {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Nonnull
-    @Field("name")
+    @Column(name = "name")
     private String name;
 
     @Nonnull
-    @Field("species")
+    @Column(name = "species")
     private Species species;
 
     @Nullable
-    @Field("age")
+    @Column(name = "age")
     private Integer age;
 
     @Nullable
-    @Field("owner_name")
+    @Column(name = "owner_name")
     private String ownerName;
 
     @Nonnull
-    @Field("created_at")
+    @Column(name = "created_at")
     private Instant createAt;
 
     @Nonnull
-    @Field("last_modified")
+    @Column(name = "last_modified")
     private Instant lastModified;
 
     @Nonnull

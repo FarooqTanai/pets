@@ -1,12 +1,9 @@
 package com.mdotm.pets.service;
 
-import com.mdotm.pets.model.PetDocument;
 import com.mdotm.pets.model.PetRequest;
 import com.mdotm.pets.model.PetResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface PetService {
 

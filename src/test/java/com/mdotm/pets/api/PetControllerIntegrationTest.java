@@ -1,7 +1,10 @@
 package com.mdotm.pets.api;
 
+import com.mdotm.pets.dao.PetJpaRepository;
 import com.mdotm.pets.dao.PetRepository;
 import com.mdotm.pets.model.PetDocument;
+import com.mdotm.pets.model.PetJpaDocument;
+import com.mdotm.pets.service.SequenceGeneratorService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,12 +36,15 @@ public class PetControllerIntegrationTest {
     @Autowired
     private PetRepository petRepository;
 
+    @Autowired
+    private SequenceGeneratorService sequenceGeneratorService;
+
     @BeforeEach
     public void setUp() {
-
+        PET_ID= sequenceGeneratorService.generateSequence("pet_sequence");
         Instant now = Instant.now();
         PetDocument pet = new PetDocument(
-                null,
+                PET_ID,
                 "lilli",
                 CAT,
                 3,
@@ -47,7 +53,7 @@ public class PetControllerIntegrationTest {
                 now
         );
         PetDocument pet2 = new PetDocument(
-                null,
+                sequenceGeneratorService.generateSequence("pet_sequence"),
                 "tommy",
                 DOG,
                 0,
@@ -55,7 +61,7 @@ public class PetControllerIntegrationTest {
                 now,
                 now
         );
-        PET_ID = petRepository.save(pet).toPetResponse().id();
+        petRepository.save(pet).toPetResponse();
         petRepository.save(pet2);
     }
 

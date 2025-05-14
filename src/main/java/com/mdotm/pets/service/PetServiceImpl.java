@@ -1,10 +1,12 @@
 package com.mdotm.pets.service;
 
+import com.mdotm.pets.dao.PetJpaRepository;
 import com.mdotm.pets.dao.PetRepository;
 import com.mdotm.pets.exception.GenericException;
 import com.mdotm.pets.exception.PetAlreadyExistException;
 import com.mdotm.pets.exception.PetNotFoundException;
 import com.mdotm.pets.model.PetDocument;
+import com.mdotm.pets.model.PetJpaDocument;
 import com.mdotm.pets.model.PetRequest;
 import com.mdotm.pets.model.PetResponse;
 import jakarta.annotation.Nonnull;
@@ -19,10 +21,16 @@ import java.time.Instant;
 @Slf4j
 public class PetServiceImpl implements PetService {
 
-    private PetRepository petRepository;
+    @Nonnull
+    private final PetRepository petRepository;
 
-    public PetServiceImpl(PetRepository petRepository) {
+    @Nonnull
+    private final SequenceGeneratorService sequenceGeneratorService;
+
+
+    public PetServiceImpl(@Nonnull PetRepository petRepository, @Nonnull SequenceGeneratorService sequenceGeneratorService) {
         this.petRepository = petRepository;
+        this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
     /**
@@ -42,7 +50,8 @@ public class PetServiceImpl implements PetService {
                             String.format("Pet: %s with owner: %s for species: %s already exists", pet.name(), pet.ownerName(), pet.species()));
                 });
         var now = Instant.now();
-        var petDocument = new PetDocument(null, pet.name(), pet.species(), pet.age(), pet.ownerName(), now, now);
+        var id = sequenceGeneratorService.generateSequence("pet_sequence");
+        var petDocument = new PetDocument(id, pet.name(), pet.species(), pet.age(), pet.ownerName(), now, now);
         try {
             return petRepository.save(petDocument).toPetResponse();
         } catch (Exception e) {

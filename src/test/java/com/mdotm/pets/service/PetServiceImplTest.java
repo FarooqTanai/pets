@@ -1,5 +1,6 @@
 package com.mdotm.pets.service;
 
+import com.mdotm.pets.dao.PetJpaRepository;
 import com.mdotm.pets.dao.PetRepository;
 import com.mdotm.pets.exception.*;
 import com.mdotm.pets.model.*;
@@ -21,6 +22,9 @@ public class PetServiceImplTest {
     @Mock
     private PetRepository petRepository;
 
+    @Mock
+    private SequenceGeneratorService sequenceGeneratorService;
+
     @InjectMocks
     private PetServiceImpl petService;
 
@@ -40,6 +44,7 @@ public class PetServiceImplTest {
         when(petRepository.findByNameAndSpeciesAndOwnerName(any(), any(), any()))
                 .thenReturn(Optional.empty());
         when(petRepository.save(any())).thenReturn(petDocument);
+        when(sequenceGeneratorService.generateSequence(any())).thenReturn(1L);
 
         PetResponse response = petService.createPet(petRequest);
 
